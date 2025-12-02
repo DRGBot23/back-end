@@ -1,4 +1,5 @@
 # Trabalho final de Back-End
+Trabalho feito por Daniel Ribeiro Gonçalves.
 # Como executar o projeto
 
 **Importante:** o repositório já acompanha o arquivo `db.sqlite3`, contendo dados iniciais e usuários prontos para uso.
