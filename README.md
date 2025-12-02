@@ -6,7 +6,7 @@
 ## 1. Clone o repositório
 
 ```bash
-git clone https://github.com/SEU_USUARIO/seu-repo.git
+git clone https://github.com/DRGBot23/back-end.git
 cd seu-repo
 ```
 
@@ -19,7 +19,7 @@ python -m venv env
 ```bash
 Windows:
 PowerShell: env\Scripts\activate
-Gitbash: source backend-env/Scripts/activate
+Gitbash: source env/Scripts/activate
 
 Linux / Mac:
 source env/bin/activate
