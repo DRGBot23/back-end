@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2 class="mb-4">Dashboard</h2>
+
+<div class="row">
+
+    <div class="col-md-4 mb-3">
+        <div class="card border-dark">
+            <div class="card-header bg-dark text-white">
+                Vendas de Hoje
+            </div>
+            <div class="card-body">
+                <p><strong>{{ total_vendas }}</strong> vendas</p>
+                <p>Total: <strong>R$ {{ total_vendas_valor|floatformat:2 }}</strong></p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-3">
+        <div class="card border-dark">
+            <div class="card-header bg-dark text-white">
+                Entregas de Hoje
+            </div>
+            <div class="card-body">
+                <p><strong>{{ total_entregas }}</strong> entregas</p>
+                <p>Total: <strong>R$ {{ total_entregas_valor|floatformat:2 }}</strong></p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-3">
+        <div class="card border-dark">
+            <div class="card-header bg-dark text-white">
+                Clientes Cadastrados
+            </div>
+            <div class="card-body">
+                <p><strong>{{ clientes_total }}</strong> clientes</p>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{% if produtos_baixo %}
+<div class="alert alert-danger mt-4">
+    ⚠ Existem <strong>{{ produtos_baixo.count }}</strong> produtos com estoque baixo!
+    <a href="/produtos/estoque-baixo/" class="alert-link">Clique aqui para ver</a>.
+</div>
+{% endif %}
+
+{% endblock %}

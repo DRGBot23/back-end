@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>{% if editar %}Editar Funcionário{% else %}Novo Funcionário{% endif %}</h2>
+
+<form method="post">
+    {% csrf_token %}
+
+    <h4>Dados do Funcionário</h4>
+    {{ form_funcionario.as_p }}
+
+    <h4>Endereço</h4>
+    {{ form_endereco.as_p }}
+
+    <div class="d-flex gap-2 mt-3">
+        <button class="btn btn-success">
+            {% if editar %}Salvar Alterações{% else %}Salvar{% endif %}
+        </button>
+
+        <a href="/pessoas/funcionarios/" class="btn btn-secondary">Cancelar</a>
+    </div>
+</form>
+
+{% endblock %}

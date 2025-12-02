@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Clientes</h2>
+
+<div class="d-flex justify-content-end">
+    <a class="btn btn-success mb-3" href="/pessoas/clientes/novo/">Novo Cliente</a>
+</div>
+
+<table class="table table-striped table-bordered align-middle">
+    <thead class="table-dark">
+        <tr>
+            <th>Nome</th>
+            <th>CPF</th>
+            <th>Pontos</th>
+            <th class="text-center">Ações</th>
+        </tr>
+    </thead>
+
+    <tbody>
+    {% for c in clientes %}
+        <tr>
+            <td>{{ c.nome }}</td>
+            <td>{{ c.cpf }}</td>
+            <td>{{ c.pontos }}</td>
+
+            <td class="text-center">
+                <a class="btn btn-secondary btn-sm" href="/pessoas/clientes/editar/{{ c.id }}/">Editar</a>
+                <a class="btn btn-danger btn-sm" href="/pessoas/clientes/excluir/{{ c.id }}/">Excluir</a>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

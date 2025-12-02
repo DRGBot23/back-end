@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Supermercado</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background: #fff;
+            color: #000;
+        }
+
+        .navbar {
+            background-color: #000 !important;
+        }
+
+        .btn-success { background-color: #198754 !important; border-color: #198754 !important; }
+        .btn-danger { background-color: #dc3545 !important; border-color: #dc3545 !important; }
+        .btn-secondary { background-color: #6c757d !important; border-color: #6c757d !important; }
+
+        .navbar .btn-outline-light:hover {
+            background-color: #fff !important;
+            color: #000 !important;
+        }
+
+        .btn-logout {
+            background-color: #dc3545 !important;
+            border-color: #dc3545 !important;
+            color: #fff !important;
+        }
+        .btn-logout:hover {
+            opacity: 0.8;
+        }
+    </style>
+
+</head>
+
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark mb-4">
+    <div class="container-fluid">
+
+        <a class="navbar-brand" href="/">Supermercado</a>
+
+        <div class="d-flex">
+
+            {% if request.session.funcionario_id %}
+
+                <a class="btn btn-outline-light me-2" href="/produtos/lista/">Produtos</a>
+                <a class="btn btn-outline-light me-2" href="/produtos/estoque-baixo/">Estoque Baixo</a>
+                <a class="btn btn-outline-light me-2" href="/entregas/">Entregas</a>
+                <a class="btn btn-outline-light me-2" href="/vendas/">Vendas</a>
+                <a class="btn btn-outline-light me-2" href="/pessoas/clientes/">Clientes</a>
+
+                {% if request.session.funcionario_tipo == "ADM" %}
+                    <a class="btn btn-outline-light me-2" href="/pessoas/funcionarios/">Funcionários</a>
+                {% endif %}
+
+                <span class="text-light me-3 ms-3">
+                    Logado como: <strong>{{ request.session.funcionario_tipo }}</strong>
+                </span>
+
+                <a href="/logout/" class="btn btn-logout">Sair</a>
+
+            {% else %}
+                <a href="/login/" class="btn btn-outline-light">Login</a>
+            {% endif %}
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    {% block content %}{% endblock %}
+</div>
+
+</body>
+</html>

@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2 class="mb-3">Venda #{{ venda.id }}</h2>
+
+<div class="card mb-4">
+    <div class="card-body">
+        <p><strong>Data:</strong> {{ venda.data_venda|date:"d/m/Y" }}</p>
+        <p><strong>Cliente:</strong> {{ venda.cliente.nome }}</p>
+        <p><strong>Funcionário:</strong> {{ venda.funcionario.nome }}</p>
+        <p><strong>Total:</strong> R$ {{ venda.valor_total|floatformat:2 }}</p>
+    </div>
+</div>
+
+<h4 class="mb-3">Itens da Venda</h4>
+
+<table class="table table-striped table-bordered">
+    <thead class="table-light">
+        <tr>
+            <th>Produto</th>
+            <th>Qtd</th>
+            <th>Subtotal</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for item in itens %}
+        <tr>
+            <td>{{ item.produto.nome }}</td>
+            <td>{{ item.quantidade }}</td>
+            <td>R$ {{ item.subtotal|floatformat:2 }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<a href="/vendas/" class="btn btn-secondary mt-3">Voltar</a>
+
+{% endblock %}

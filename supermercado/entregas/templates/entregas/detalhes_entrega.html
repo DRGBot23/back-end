@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2 class="mb-4">Detalhes da Entrega</h2>
+
+<div class="card mb-4">
+    <div class="card-body">
+        <p><strong>Nota Fiscal:</strong> {{ entrega.nota_fiscal }}</p>
+        <p><strong>Data da Entrega:</strong> {{ entrega.data_entrega|date:"d/m/Y" }}</p>
+        <p><strong>Valor Total:</strong> R$ {{ entrega.valor_total|floatformat:2 }}</p>
+    </div>
+</div>
+
+<h4>Itens</h4>
+<table class="table table-bordered table-striped">
+    <thead class="table-dark">
+        <tr>
+            <th>Produto</th>
+            <th>Quantidade</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for item in itens %}
+        <tr>
+            <td>{{ item.produto.nome }}</td>
+            <td>{{ item.quantidade }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="2" class="text-center">Nenhum item registrado.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<a href="/entregas/" class="btn btn-secondary mt-3">Voltar</a>
+
+{% endblock %}

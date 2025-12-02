@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2 class="mb-4">Produtos com Estoque Baixo</h2>
+
+<table class="table table-bordered table-striped align-middle">
+    <thead class="table-dark">
+        <tr>
+            <th>Produto</th>
+            <th>Quantidade Atual</th>
+            <th>Mínimo</th>
+        </tr>
+    </thead>
+
+    <tbody>
+    {% for p in produtos %}
+        <tr class="{% if p.estoque.quantidade == 0 %}table-danger{% endif %}">
+            <td>{{ p.nome }}</td>
+            <td>{{ p.estoque.quantidade }}</td>
+            <td>{{ p.minimo_estoque }}</td>
+        </tr>
+    {% empty %}
+        <tr>
+            <td colspan="3" class="text-center py-3">Nenhum produto com estoque baixo.</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

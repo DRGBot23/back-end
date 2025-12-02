@@ -1,0 +1,41 @@
+# Ambientes virtuais
+env/
+venv/
+backend-env/
+
+# Arquivos do Python
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+*/__pycache__/
+
+# Migrations compiladas
+*/migrations/*.pyc
+*/migrations/__pycache__/
+
+# Configurações locais
+*.env
+.env
+
+# Cache
+django_cache/
+
+# Arquivos temporários
+*.log
+*.pot
+*.sqlite3-journal
+*.swp
+*.swo
+
+# Diretórios de IDE
+.vscode/
+.idea/
+
+# Arquivos do sistema
+.DS_Store
+Thumbs.db
+
+# Django static (opcional, recomendado)
+staticfiles/
+media/

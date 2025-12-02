@@ -1,0 +1,215 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<h2 class="mb-4">Registrar Entrega</h2>
+
+<form method="post" id="entrega-form">
+    {% csrf_token %}
+
+    <div class="row mb-3">
+        <div class="col-6">
+            {{ form.nota_fiscal.label_tag }}
+            {{ form.nota_fiscal }}
+        </div>
+
+        <div class="col-6">
+            {{ form.data_entrega.label_tag }}
+            {{ form.data_entrega }}
+        </div>
+    </div>
+
+    <h4 class="mb-3">Itens da Entrega</h4>
+
+    {{ formset.management_form }}
+
+    <table class="table table-bordered" id="itens-table">
+        <thead class="table-dark">
+            <tr>
+                <th style="width:40%">Produto</th>
+                <th style="width:10%">Qtd</th>
+                <th style="width:20%">Preço Compra</th>
+                <th style="width:20%">Subtotal</th>
+                <th style="width:10%">Ações</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for f in formset.forms %}
+            <tr class="item-row">
+                <td>
+                    <select name="itens-{{ forloop.counter0 }}-produto" class="form-control produto-select">
+                        <option value="">-- Novo Produto --</option>
+                        {% for p in produtos %}
+                            <option value="{{ p.id }}" data-preco="{{ p.preco_compra }}">
+                                {{ p.nome }}
+                            </option>
+                        {% endfor %}
+                    </select>
+
+                    <input type="text" 
+                           name="itens-{{ forloop.counter0 }}-produto_nome" 
+                           class="form-control mt-2 produto-nome" 
+                           placeholder="Nome do novo produto">
+                </td>
+
+                <td>
+                    <input type="number" 
+                           name="itens-{{ forloop.counter0 }}-quantidade" 
+                           class="form-control quantidade-input" 
+                           value="1" min="1">
+                </td>
+
+                <td>
+                    <input type="number" step="0.01"
+                           name="itens-{{ forloop.counter0 }}-preco_compra"
+                           class="form-control preco-input">
+                </td>
+
+                <td class="subtotal-cell">0,00</td>
+
+                <td>
+                    <button type="button" class="btn btn-danger btn-sm remove-item">−</button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <button type="button" class="btn btn-secondary mb-3" id="add-item">+ Adicionar Item</button>
+
+    <div class="mb-3">
+        <label><strong>Total da Entrega (R$):</strong></label>
+        <input type="text" id="total_entrega" class="form-control" readonly value="0,00">
+    </div>
+
+    <div class="d-flex gap-2">
+        <button class="btn btn-success" type="submit">Registrar</button>
+        <a href="/entregas/" class="btn btn-secondary">Cancelar</a>
+    </div>
+</form>
+
+
+<table style="display:none">
+    <tbody id="empty-form">
+        <tr class="item-row">
+            <td>
+                <select name="itens-__prefix__-produto" class="form-control produto-select">
+                    <option value="">-- Novo Produto --</option>
+                    {% for p in produtos %}
+                        <option value="{{ p.id }}" data-preco="{{ p.preco_compra }}">
+                            {{ p.nome }}
+                        </option>
+                    {% endfor %}
+                </select>
+
+                <input type="text" 
+                       name="itens-__prefix__-produto_nome"
+                       class="form-control mt-2 produto-nome"
+                       placeholder="Nome do novo produto">
+            </td>
+
+            <td>
+                <input type="number"
+                       name="itens-__prefix__-quantidade"
+                       class="form-control quantidade-input"
+                       value="1"
+                       min="1">
+            </td>
+
+            <td>
+                <input type="number" step="0.01"
+                       name="itens-__prefix__-preco_compra"
+                       class="form-control preco-input">
+            </td>
+
+            <td class="subtotal-cell">0,00</td>
+
+            <td>
+                <button type="button" class="btn btn-danger btn-sm remove-item">−</button>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<script>
+function formatBR(n) { return n.toFixed(2).replace('.', ','); }
+function parseBR(v) {
+    if (!v) return 0;
+    return parseFloat(String(v).replace(',', '.')) || 0;
+}
+
+function recalcTotals() {
+    let total = 0;
+
+    document.querySelectorAll('.item-row').forEach(row => {
+        let qtd = parseInt(row.querySelector('.quantidade-input').value) || 0;
+        let preco = parseBR(row.querySelector('.preco-input').value);
+
+        let subtotal = preco * qtd;
+        row.querySelector('.subtotal-cell').innerText = formatBR(subtotal);
+        total += subtotal;
+    });
+
+    document.getElementById('total_entrega').value = formatBR(total);
+}
+
+function bindRowEvents(row) {
+    const produtoSelect = row.querySelector('.produto-select');
+    const precoInput = row.querySelector('.preco-input');
+    const nomeNovo = row.querySelector('.produto-nome');
+
+    produtoSelect.addEventListener('change', () => {
+        let opt = produtoSelect.options[produtoSelect.selectedIndex];
+        let preco = opt.dataset.preco || "";
+
+        if (produtoSelect.value) {
+            nomeNovo.value = "";
+            nomeNovo.readOnly = true;
+            precoInput.value = preco;
+        } else {
+            nomeNovo.readOnly = false;
+            precoInput.value = "";
+        }
+
+        recalcTotals();
+    });
+
+    row.querySelector('.quantidade-input').addEventListener('input', recalcTotals);
+    precoInput.addEventListener('input', recalcTotals);
+
+    row.querySelector('.remove-item').addEventListener('click', () => {
+        row.remove();
+        updateTotalForms(-1);
+        recalcTotals();
+    });
+}
+
+function updateTotalForms(delta) {
+    const totalForms = document.querySelector('input[name="itens-TOTAL_FORMS"]');
+    totalForms.value = parseInt(totalForms.value) + delta;
+}
+
+document.getElementById('add-item').addEventListener('click', () => {
+    const totalForms = document.querySelector('input[name="itens-TOTAL_FORMS"]');
+    const index = parseInt(totalForms.value);
+
+    let empty = document.querySelector('#empty-form tr').cloneNode(true);
+
+    empty.querySelectorAll('select, input').forEach(el => {
+        el.name = el.name.replace('__prefix__', index);
+    });
+
+    document.querySelector('#itens-table tbody').appendChild(empty);
+
+    updateTotalForms(1);
+    bindRowEvents(empty);
+    recalcTotals();
+});
+
+
+document.querySelectorAll('.item-row').forEach(row => bindRowEvents(row));
+document.addEventListener('DOMContentLoaded', recalcTotals);
+</script>
+
+{% endblock %}

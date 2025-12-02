@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2 class="mb-3">Excluir Venda</h2>
+
+<p>Tem certeza que deseja excluir a venda <strong>#{{ objeto.id }}</strong>?</p>
+
+<form method="post">
+    {% csrf_token %}
+    <button class="btn btn-danger">Excluir</button>
+    <a href="/vendas/" class="btn btn-secondary ms-2">Cancelar</a>
+</form>
+
+{% endblock %}
